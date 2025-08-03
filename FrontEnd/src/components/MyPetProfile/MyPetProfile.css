@@ -1,0 +1,464 @@
+/* MyPetProfile.css */
+
+/* 전체 컨테이너 */
+.mypet-profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 프로필 헤더 */
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: #333;
+}
+
+.profile-header .paw-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+    color: #4ecdc4;
+}
+
+.profile-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.profile-header p {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+}
+
+/* 반려견 그리드 */
+.pets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* 반려견 프로필 카드 */
+.pet-profile-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.pet-profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* 카드 헤더 */
+.pet-card-header {
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pet-card-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.pet-number {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* 프로필 콘텐츠 */
+.pet-profile-content {
+    padding: 2rem;
+}
+
+/* 프로필 이미지 섹션 */
+.pet-profile-image-section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.pet-profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #f8f9fa;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.pet-profile-image:hover {
+    transform: scale(1.05);
+}
+
+.pet-no-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 4px solid #f8f9fa;
+}
+
+.pet-no-image span {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.pet-no-image p {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* 프로필 업로드 */
+.pet-profile-upload {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.upload-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.upload-label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+}
+
+.upload-icon {
+    font-size: 1.2rem;
+}
+
+.uploading-text {
+    color: #fff;
+    font-style: italic;
+}
+
+/* 프로필 정보 */
+.pet-profile-info {
+    margin-bottom: 1rem;
+}
+
+.pet-info-section h4 {
+    color: #495057;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.pet-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.pet-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.pet-info-item label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pet-info-item span {
+    font-size: 1rem;
+    color: #495057;
+    font-weight: 600;
+}
+
+.pet-info-item span[data-type="number"] {
+    font-family: 'Courier New', monospace;
+    color: #4ecdc4;
+}
+
+/* 입양 배지 */
+.adopt-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.adopt-badge.adopted {
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+    color: white;
+}
+
+.adopt-badge.not-adopted {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+/* 프로필 액션 버튼 */
+.pet-profile-actions {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+.edit-btn,
+.delete-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.edit-btn {
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+    color: white;
+}
+
+.edit-btn:hover {
+    background: linear-gradient(45deg, #45b7d1, #3da5b8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.delete-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(45deg, #764ba2, #5a4f74);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* 글로벌 액션 */
+.global-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.register-btn {
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.register-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+}
+
+/* 로딩 상태 */
+.loading-spinner-large {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+/* 에러 메시지 */
+.error-message-large {
+    color: #dc3545;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8d7da;
+    border-radius: 10px;
+    border: 1px solid #f5c6cb;
+}
+
+.retry-btn {
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+/* 프로필 없음 상태 */
+.no-profile {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #6c757d;
+}
+
+.no-profile .paw-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.no-profile h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #495057;
+}
+
+.no-profile p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+}
+
+/* 애니메이션 */
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .mypet-profile-container {
+        padding: 1rem;
+    }
+
+    .pets-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .pet-profile-content {
+        padding: 1.5rem;
+    }
+
+    .pet-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pet-profile-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .profile-header h2 {
+        font-size: 2rem;
+    }
+
+    .pet-card-header {
+        padding: 1rem;
+    }
+
+    .pet-card-header h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mypet-profile-container {
+        padding: 0.5rem;
+    }
+
+    .pet-profile-content {
+        padding: 1rem;
+    }
+
+    .pet-profile-image,
+    .pet-no-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .register-btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+}
