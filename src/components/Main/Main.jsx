@@ -71,7 +71,7 @@ function Main() {
                         <div className="no-pets">
                             <p>등록된 반려견이 없습니다.</p>
                             <button
-                                onClick={() => navigate('/mypet/register')}
+                                onClick={() => navigate('/pet/register')}
                                 className="add-pet-btn-large"
                             >
                                 첫 반려견 등록하기
