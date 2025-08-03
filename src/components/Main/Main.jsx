@@ -80,7 +80,7 @@ function Main() {
                     ) : (
                         <div className="pets-grid">
                             {pets.map((pet) => (
-                                <div key={pet.petId} className="pet-card" onClick={() => navigate(`/mypet/profile/${pet.petId}`)}>
+                                <div key={pet.petId} className="pet-card" onClick={() => navigate(`/pet/profile/${pet.petId}`)}>
                                     <div className="pet-avatar">
                                         {pet.profile ? (
                                             <img src={pet.profile} alt={pet.name} />
@@ -140,7 +140,7 @@ function Main() {
                                 </div>
                             </>
                         ) : (
-                            <div className="feature-card" onClick={() => navigate('/abandonedpet/register')}>
+                            <div className="feature-card" onClick={() => navigate('/abandoned/register')}>
                                 <div className="feature-icon">🚨</div>
                                 <h4>유기견 제보</h4>
                                 <p>유기견을 발견하셨다면, 신고해주세요!</p>
