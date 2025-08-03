@@ -43,10 +43,13 @@
     ]
   },
   "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
     "transformIgnorePatterns": [
       "/node_modules/(?!(axios)/)"
     ]
-  },
+  },  
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
