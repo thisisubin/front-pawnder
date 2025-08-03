@@ -43,9 +43,9 @@
     ]
   },
   "jest": {
-    "transform": {
-      "^.+\\.(js|jsx)$": "babel-jest"
-    }
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(axios)/)"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
