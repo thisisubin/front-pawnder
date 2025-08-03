@@ -98,7 +98,8 @@ function SignUpForm() {
         try {
             // 백엔드로 인증번호 발송 요청
             const response = await axios.post('/api/users/send-email', null, {
-                params: { email: form.email }
+                params: { email: form.email },
+                withCredentials: true
             });
             alert('인증번호가 이메일로 발송되었습니다! 📧');
             setCodeSent(true);
