@@ -24,15 +24,15 @@ function App() {
         <Route path='/' element={<Main />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/mypet/register" element={<MyPetPage />} />
-        <Route path="/mypet/edit/:petId" element={<MyPetEditPage />} />
-        <Route path='/mypet/profile/:petId' element={<MyPetProfile />} />
+        <Route path="/pet/register" element={<MyPetPage />} />
+        <Route path="/pet/edit/:petId" element={<MyPetEditPage />} />
+        <Route path='/pet/profile/:petId' element={<MyPetProfile />} />
         <Route path='/main' element={<Main />} />
-        <Route path='/abandonedpet/register' element={<AbandonedPetPage />} />
+        <Route path='/abandoned/register' element={<AbandonedPetPage />} />
         <Route path="/admin/abandoned-pets" element={<AdminAbandonedPets />} />
         <Route path="/adopt" element={<AdoptList />} />
         <Route path='/admin/adopt-applications' element={<AdoptApplications />} />
-        
+
         <Route path='/community' element={<CommunityPage />} />
         <Route path='/community/createPost' element={<CommunityPost />} />
         <Route path='/community/posts' element={<CommunityGet />} />
