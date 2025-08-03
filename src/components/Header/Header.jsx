@@ -28,7 +28,7 @@ function Header({ user, onLogout }) {
                     🐾 Pawnder
                 </h1>
                 <div className="user-info">
-                    {user.username ? (
+                    {user && user.username ? (
                         <>
                             <span className="welcome-text">
                                 안녕하세요, {user.username}님!
