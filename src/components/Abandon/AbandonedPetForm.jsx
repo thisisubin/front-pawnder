@@ -9,6 +9,8 @@ import Header from "../Header/Header";
 function AbandonedPetForm() {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+    const [predictedBreed, setPredictedBreed] = useState('');
+    const [isPredicting, setIsPredicting] = useState(false);
 
     useEffect(() => {
         // 사용자 정보 가져오기
@@ -73,6 +75,9 @@ function AbandonedPetForm() {
                     imageurl: file,
                     preview: reader.result, // base64 문자열 또는 Blob URL
                 }));
+
+                // 이미지가 업로드되면 품종 예측 실행
+                predictBreed(file);
             };
             reader.readAsDataURL(file); // 이미지 파일을 dataURL로 읽음
         } else {
@@ -82,6 +87,41 @@ function AbandonedPetForm() {
             });
         }
     }
+
+    // 품종 예측 함수
+    const predictBreed = async (imageFile) => {
+        if (!imageFile) return;
+
+        setIsPredicting(true);
+        setPredictedBreed('');
+
+        try {
+            const formData = new FormData();
+            formData.append('imageurl', imageFile);
+
+            const response = await axios.post('/api/abandoned/predict', formData, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+
+            const { predictedBreed } = response.data;
+            setPredictedBreed(predictedBreed);
+
+            // 예측된 품종을 form의 type 필드에 자동 설정
+            setForm(prev => ({
+                ...prev,
+                type: predictedBreed
+            }));
+
+        } catch (error) {
+            console.error('품종 예측 실패:', error);
+            alert('품종 예측에 실패했습니다. 수동으로 입력해주세요.');
+        } finally {
+            setIsPredicting(false);
+        }
+    };
 
     const validateForm = () => {
         const newErrors = {};
@@ -237,7 +277,40 @@ function AbandonedPetForm() {
 
                     <div className="form-group">
                         <label>AI 품종 판별하기</label>
-                        <textarea placeholder='AI 도입해서 품종을 판별할 예정입니다...'></textarea>
+                        {isPredicting ? (
+                            <div className="predicting-status">
+                                <p>🔍 AI가 품종을 분석하고 있습니다...</p>
+                            </div>
+                        ) : predictedBreed ? (
+                            <div className="prediction-result">
+                                <p>✅ 예측된 품종: <strong>{predictedBreed}</strong></p>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setPredictedBreed('');
+                                        setForm(prev => ({ ...prev, type: '' }));
+                                    }}
+                                    className="reset-prediction"
+                                >
+                                    다시 예측하기
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="prediction-placeholder">
+                                <p>📷 사진을 업로드하면 AI가 품종을 자동으로 판별합니다</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="form-group">
+                        <label>품종 (수동 입력)</label>
+                        <input
+                            type="text"
+                            name="type"
+                            value={form.type}
+                            onChange={handleChange}
+                            placeholder="AI 예측 결과가 자동으로 입력되거나 수동으로 입력하세요"
+                        />
                     </div>
 
                     <div className="form-group">
