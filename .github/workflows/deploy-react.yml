@@ -69,3 +69,14 @@ jobs:
           script: |
             sudo systemctl reload nginx
             echo "Deployment completed successfully!"
+
+      - name: Clean existing files on EC2
+        uses: appleboy/ssh-action@master
+        with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ubuntu
+            key: ${{ secrets.EC2_SSH_KEY }}
+            script: |
+                sudo rm -rf /home/ubuntu/react-app
+                mkdir -p /home/ubuntu/react-app
+          
