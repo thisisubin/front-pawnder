@@ -1,7 +1,7 @@
 /* MyPetForm 전체 컨테이너 */
 .mypet-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -27,7 +27,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    background: linear-gradient(45deg, #667eea, #764ba2);
 }
 
 /* 폼 헤더 */
@@ -47,7 +47,7 @@
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 10px 0;
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    background: linear-gradient(45deg, #667eea, #764ba2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -102,9 +102,9 @@
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #4ecdc4;
+    border-color: #667eea;
     background: white;
-    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* 에러 상태 */
@@ -141,7 +141,7 @@
 
 .form-group .custom-file-label {
     display: inline-block;
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    background: linear-gradient(45deg, #667eea, #764ba2);
     color: white;
     padding: 12px 28px;
     border-radius: 10px;
@@ -149,15 +149,15 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
     border: none;
     margin-bottom: 0;
 }
 
 .form-group .custom-file-label:hover {
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    background: linear-gradient(45deg, #5a6fd8, #6a4190);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .form-group .file-name {
@@ -207,7 +207,7 @@
 }
 
 .radio-group label:hover {
-    border-color: #4ecdc4;
+    border-color: #667eea;
     background: #f8fffe;
 }
 
@@ -215,11 +215,11 @@
     margin: 0;
     width: 16px;
     height: 16px;
-    accent-color: #4ecdc4;
+    accent-color: #667eea;
 }
 
 .radio-group input[type="radio"]:checked+span {
-    color: #4ecdc4;
+    color: #667eea;
     font-weight: 600;
 }
 
@@ -250,7 +250,7 @@
 
 /* 제출 버튼 */
 .submit-btn {
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    background: linear-gradient(45deg, #667eea, #764ba2);
     color: white;
     border: none;
     padding: 16px;
@@ -267,7 +267,7 @@
 
 .submit-btn:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
 .submit-btn:active:not(:disabled) {
@@ -398,45 +398,11 @@
     }
 }
 
-/* 다크 모드 지원 */
-@media (prefers-color-scheme: dark) {
-    .mypet-card {
-        background: #1a1a1a;
-        color: #fff;
-    }
-
-    .form-header h2 {
-        color: #fff;
-    }
-
-    .form-header p {
-        color: #ccc;
-    }
-
-    .form-group label {
-        color: #fff;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        background: #2a2a2a;
-        border-color: #444;
-        color: #fff;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-        background: #333;
-    }
-}
-
 /* 포커스 가시성 */
 .form-group input:focus-visible,
 .form-group select:focus-visible,
 .form-group textarea:focus-visible {
-    outline: 2px solid #4ecdc4;
+    outline: 2px solid #667eea;
     outline-offset: 2px;
 }
 

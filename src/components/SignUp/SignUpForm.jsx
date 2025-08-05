@@ -1,7 +1,8 @@
 // src/components/SignUp/SignUpForm.jsx
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from 'axios';
+import Header from '../Header/Header';
 import './SignUpForm.css';
 
 function SignUpForm() {
@@ -22,6 +23,24 @@ function SignUpForm() {
     const [isVerifyingCode, setIsVerifyingCode] = useState(false);
     const [verificationCode, setVerificationCode] = useState('');
     const [codeSent, setCodeSent] = useState(false);
+    const [timer, setTimer] = useState(0);
+    const timerRef = useRef(null);
+    const [user, setUser] = useState(null);
+
+    // 사용자 정보 가져오기
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const userResponse = await axios.get('/api/users/check-session', {
+                    withCredentials: true
+                });
+                setUser(userResponse.data);
+            } catch (error) {
+                console.error('사용자 정보 로딩 실패:', error);
+            }
+        };
+        fetchUserData();
+    }, []);
 
     const handleChange = (e) => {
         setForm({
@@ -104,6 +123,30 @@ function SignUpForm() {
             alert('인증번호가 이메일로 발송되었습니다! 📧');
             setCodeSent(true);
             setEmailVerified(false); // 인증번호 발송 시 인증 상태 초기화
+
+            // 타이머 시작
+            console.log('타이머 시작: 120초');
+            setTimer(120); // 2분(120초)
+
+            // 기존 타이머 정리
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+
+            // 새 타이머 시작
+            timerRef.current = setInterval(() => {
+                setTimer(prev => {
+                    console.log('타이머 업데이트:', prev - 1);
+                    if (prev <= 1) {
+                        clearInterval(timerRef.current);
+                        timerRef.current = null;
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+
         } catch (error) {
             console.error(error);
             alert('인증번호 발송에 실패했습니다: ' + (error.response?.data || '오류가 발생했습니다'));
@@ -171,190 +214,213 @@ function SignUpForm() {
         }
     };
 
+    // 인증 성공/실패/컴포넌트 언마운트 시 타이머 정리
+    useEffect(() => {
+        if (emailVerified || !codeSent) {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+        }
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, [emailVerified, codeSent]);
+
 
     return (
-        <div className="signup-container">
-            <div className="signup-card">
-                <div className="form-header">
-                    <div className="paw-icon">🐾</div>
-                    <h2>Pawnder 가입하기</h2>
-                    <p>유기견과 함께하는 따뜻한 pawnder 커뮤니티에 오신 것을 환영합니다</p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="signup-form">
-                    <div className="form-group">
-                        <label htmlFor="name">이름 *</label>
-                        <input
-                            id="name"
-                            name="name"
-                            type="text"
-                            placeholder="홍길동"
-                            value={form.name}
-                            onChange={handleChange}
-                            className={errors.name ? 'error' : ''}
-                        />
-                        {errors.name && <span className="error-message">{errors.name}</span>}
+        <>
+            <Header user={user} />
+            <div className="signup-container">
+                <div className="signup-card">
+                    <div className="form-header">
+                        <div className="paw-icon">🐾</div>
+                        <h2>Pawnder 가입하기</h2>
+                        <p>유기견과 함께하는 따뜻한 pawnder 커뮤니티에 오신 것을 환영합니다</p>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="userId">아이디 *</label>
-                        <input
-                            id="userId"
-                            name="userId"
-                            type="text"
-                            placeholder="4자 이상 입력해주세요"
-                            value={form.userId}
-                            onChange={handleChange}
-                            className={errors.userId ? 'error' : ''}
-                        />
-                        {errors.userId && <span className="error-message">{errors.userId}</span>}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="email">이메일 *</label>
-                        <div className="email-input-group">
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                placeholder="example@email.com"
-                                value={form.email}
-                                onChange={handleChange}
-                                className={errors.email ? 'error' : ''}
-                                disabled={emailVerified}
-                            />
-                            <button
-                                type="button"
-                                onClick={handleSendVerificationCode}
-                                className={`send-code-btn ${emailVerified ? 'verified' : ''} ${isSendingCode ? 'sending' : ''}`}
-                                disabled={emailVerified || isSendingCode}
-                            >
-                                {emailVerified ? (
-                                    '✓ 인증완료'
-                                ) : isSendingCode ? (
-                                    <>
-                                        <span className="loading-spinner"></span>
-                                        발송중...
-                                    </>
-                                ) : (
-                                    '인증번호 보내기'
-                                )}
-                            </button>
-                        </div>
-                        {errors.email && <span className="error-message">{errors.email}</span>}
-                        {emailVerified && <span className="success-message">✓ 이메일 인증이 완료되었습니다</span>}
-                    </div>
-
-                    {codeSent && !emailVerified && (
+                    <form onSubmit={handleSubmit} className="signup-form">
                         <div className="form-group">
-                            <label htmlFor="verificationCode">인증번호 *</label>
-                            <div className="verification-input-group">
+                            <label htmlFor="name">이름 *</label>
+                            <input
+                                id="name"
+                                name="name"
+                                type="text"
+                                placeholder="홍길동"
+                                value={form.name}
+                                onChange={handleChange}
+                                className={errors.name ? 'error' : ''}
+                            />
+                            {errors.name && <span className="error-message">{errors.name}</span>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="userId">아이디 *</label>
+                            <input
+                                id="userId"
+                                name="userId"
+                                type="text"
+                                placeholder="4자 이상 입력해주세요"
+                                value={form.userId}
+                                onChange={handleChange}
+                                className={errors.userId ? 'error' : ''}
+                            />
+                            {errors.userId && <span className="error-message">{errors.userId}</span>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="email">이메일 *</label>
+                            <div className="email-input-group">
                                 <input
-                                    id="verificationCode"
-                                    name="verificationCode"
-                                    type="text"
-                                    placeholder="이메일로 받은 6자리 인증번호를 입력하세요"
-                                    value={verificationCode}
-                                    onChange={(e) => setVerificationCode(e.target.value)}
-                                    className={errors.verificationCode ? 'error' : ''}
-                                    maxLength="6"
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    placeholder="example@email.com"
+                                    value={form.email}
+                                    onChange={handleChange}
+                                    className={errors.email ? 'error' : ''}
+                                    disabled={emailVerified}
                                 />
                                 <button
                                     type="button"
-                                    onClick={handleVerifyCode}
-                                    className={`verify-code-btn ${isVerifyingCode ? 'verifying' : ''}`}
-                                    disabled={isVerifyingCode || !verificationCode.trim()}
+                                    onClick={handleSendVerificationCode}
+                                    className={`send-code-btn ${emailVerified ? 'verified' : ''} ${isSendingCode ? 'sending' : ''}`}
+                                    disabled={emailVerified || isSendingCode}
                                 >
-                                    {isVerifyingCode ? (
+                                    {emailVerified ? (
+                                        '✓ 인증완료'
+                                    ) : isSendingCode ? (
                                         <>
                                             <span className="loading-spinner"></span>
-                                            인증중...
+                                            발송중...
                                         </>
                                     ) : (
-                                        '인증하기'
+                                        '인증번호 보내기'
                                     )}
                                 </button>
                             </div>
-                            {errors.verificationCode && <span className="error-message">{errors.verificationCode}</span>}
+                            {errors.email && <span className="error-message">{errors.email}</span>}
+                            {emailVerified && <span className="success-message">✓ 이메일 인증이 완료되었습니다</span>}
                         </div>
-                    )}
 
-                    <div className="form-group">
-                        <label htmlFor="password">비밀번호 *</label>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            placeholder="6자 이상 입력해주세요"
-                            value={form.password}
-                            onChange={handleChange}
-                            className={errors.password ? 'error' : ''}
-                        />
-                        {errors.password && <span className="error-message">{errors.password}</span>}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword">비밀번호 확인 *</label>
-                        <input
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            type="password"
-                            placeholder="비밀번호를 다시 입력해주세요"
-                            value={form.confirmPassword}
-                            onChange={handleChange}
-                            className={errors.confirmPassword ? 'error' : ''}
-                        />
-                        {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="birth">생년월일 *</label>
-                        <input
-                            id="birth"
-                            name="birth"
-                            type="date"
-                            value={form.birth}
-                            onChange={handleChange}
-                            className={errors.birth ? 'error' : ''}
-                        />
-                        {errors.birth && <span className="error-message">{errors.birth}</span>}
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="phoneNm">전화번호 *</label>
-                        <input
-                            id="phoneNm"
-                            name="phoneNm"
-                            type="tel"
-                            placeholder="010-1234-5678"
-                            value={form.phoneNm}
-                            onChange={handleChange}
-                            className={errors.phoneNm ? 'error' : ''}
-                        />
-                        {errors.phoneNm && <span className="error-message">{errors.phoneNm}</span>}
-                    </div>
-
-                    <button
-                        type="submit"
-                        className={`submit-btn ${isLoading ? 'loading' : ''}`}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? (
-                            <>
-                                <span className="loading-spinner"></span>
-                                가입 중...
-                            </>
-                        ) : (
-                            '회원가입 완료 🐕'
+                        {codeSent && !emailVerified && (
+                            <div className="form-group">
+                                <label htmlFor="verificationCode">인증번호 *</label>
+                                <div className="verification-input-group">
+                                    <input
+                                        id="verificationCode"
+                                        name="verificationCode"
+                                        type="text"
+                                        placeholder="이메일로 받은 6자리 인증번호를 입력하세요"
+                                        value={verificationCode}
+                                        onChange={(e) => setVerificationCode(e.target.value)}
+                                        className={errors.verificationCode ? 'error' : ''}
+                                        maxLength="6"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleVerifyCode}
+                                        className={`verify-code-btn ${isVerifyingCode ? 'verifying' : ''}`}
+                                        disabled={isVerifyingCode || !verificationCode.trim() || timer === 0}
+                                    >
+                                        {isVerifyingCode ? (
+                                            <>
+                                                <span className="loading-spinner"></span>
+                                                인증중...
+                                            </>
+                                        ) : (
+                                            '인증하기'
+                                        )}
+                                    </button>
+                                </div>
+                                <div className="timer-container">
+                                    {timer > 0 ? (
+                                        <span className="timer-text">⏰ 남은시간: {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}</span>
+                                    ) : (
+                                        <span className="timer-text expired">⏰ 인증 시간이 만료되었습니다</span>
+                                    )}
+                                </div>
+                                {errors.verificationCode && <span className="error-message">{errors.verificationCode}</span>}
+                            </div>
                         )}
-                    </button>
-                </form>
 
-                <div className="signup-footer">
-                    <p>이미 계정이 있으신가요? <a href="/login">로그인하기</a></p>
+                        <div className="form-group">
+                            <label htmlFor="password">비밀번호 *</label>
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="6자 이상 입력해주세요"
+                                value={form.password}
+                                onChange={handleChange}
+                                className={errors.password ? 'error' : ''}
+                            />
+                            {errors.password && <span className="error-message">{errors.password}</span>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="confirmPassword">비밀번호 확인 *</label>
+                            <input
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                placeholder="비밀번호를 다시 입력해주세요"
+                                value={form.confirmPassword}
+                                onChange={handleChange}
+                                className={errors.confirmPassword ? 'error' : ''}
+                            />
+                            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="birth">생년월일 *</label>
+                            <input
+                                id="birth"
+                                name="birth"
+                                type="date"
+                                value={form.birth}
+                                onChange={handleChange}
+                                className={errors.birth ? 'error' : ''}
+                            />
+                            {errors.birth && <span className="error-message">{errors.birth}</span>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="phoneNm">전화번호 *</label>
+                            <input
+                                id="phoneNm"
+                                name="phoneNm"
+                                type="tel"
+                                placeholder="010-1234-5678"
+                                value={form.phoneNm}
+                                onChange={handleChange}
+                                className={errors.phoneNm ? 'error' : ''}
+                            />
+                            {errors.phoneNm && <span className="error-message">{errors.phoneNm}</span>}
+                        </div>
+
+                        <button
+                            type="submit"
+                            className={`submit-btn ${isLoading ? 'loading' : ''}`}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <>
+                                    <span className="loading-spinner"></span>
+                                    가입 중...
+                                </>
+                            ) : (
+                                '회원가입 완료 🐕'
+                            )}
+                        </button>
+                    </form>
+
+                    <div className="signup-footer">
+                        <p>이미 계정이 있으신가요? <a href="/login">로그인하기</a></p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

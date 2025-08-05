@@ -60,7 +60,7 @@ function Main() {
                     <div className="section-header">
                         <h3>반려견</h3>
                         <button
-                            onClick={() => navigate('/mypet/register')}
+                            onClick={() => navigate('/pet/register')}
                             className="add-pet-btn"
                         >
                             반려견 추가

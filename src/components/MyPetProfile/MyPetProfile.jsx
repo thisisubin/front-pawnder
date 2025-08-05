@@ -325,7 +325,7 @@ function MyPetProfile({ onLogout }) {
 
                 <div className="global-actions">
                     <button
-                        onClick={() => window.location.href = '/mypet/register'}
+                        onClick={() => window.location.href = '/pet/register'}
                         className="register-btn"
                     >
                         새로운 반려견 등록

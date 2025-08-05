@@ -74,7 +74,7 @@ function CommunityMain() {
                                 <p>등록된 유기견 제보를 확인하세요.</p>
                             </div>
                         ) : (
-                            <div className="feature-card" onClick={() => navigate('/abandonedpet/register')}>
+                            <div className="feature-card" onClick={() => navigate('/abandoned/register')}>
                                 <div className="feature-icon">🚨</div>
                                 <h4>유기견 제보</h4>
                                 <p>유기견을 발견하셨다면, 신고해주세요!</p>

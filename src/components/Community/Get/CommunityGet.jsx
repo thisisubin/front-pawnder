@@ -93,7 +93,7 @@ function CommunityDetail() {
             setLikeCount(response.data.likeCount);
         } catch (error) {
             console.error('좋아요 토글 실패:', error);
-            alert('좋아요 처리 중 오류가 발생했습니다.');
+            alert('로그인된 유저만 좋아요를 누를 수 있습니다.');
         }
     };
 
@@ -117,7 +117,7 @@ function CommunityDetail() {
             await fetchComments(); // 댓글 목록 새로고침
         } catch (error) {
             console.error('댓글 작성 실패:', error);
-            alert('댓글 작성 중 오류가 발생했습니다.');
+            alert('로그인된 유저만 댓글을 작성하실 수 있습니다.');
         } finally {
             setIsSubmittingComment(false);
         }
