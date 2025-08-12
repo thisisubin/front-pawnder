@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Header from '../Header/Header';
 import './AdoptList.css';
 
-function AdoptList() {
+function AdoptList({ user }) {
     const [pets, setPets] = useState([]);
-    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [applyingPetId, setApplyingPetId] = useState(null);
     const [donatingPetId, setDonatingPetId] = useState(null);
+    const [searchFilters, setSearchFilters] = useState({
+        foundDate: '',
+        foundTime: '',
+        location: ''
+    });
+    const [filteredPets, setFilteredPets] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,27 +48,14 @@ function AdoptList() {
         // 스크립트 로드 후 데이터 가져오기
         loadIamportScript()
             .then(() => {
-                fetchUserData();
                 fetchPets();
             })
             .catch((error) => {
                 console.error('스크립트 로드 실패:', error);
                 // 스크립트 로드 실패해도 기본 기능은 동작하도록
-                fetchUserData();
                 fetchPets();
             });
     }, []);
-
-    const fetchUserData = async () => {
-        try {
-            const userResponse = await axios.get('/api/users/check-session', {
-                withCredentials: true
-            });
-            setUser(userResponse.data);
-        } catch (error) {
-            console.error('사용자 정보 로딩 실패:', error);
-        }
-    };
 
     const fetchPets = async () => {
         try {
@@ -71,11 +63,57 @@ function AdoptList() {
                 withCredentials: true
             });
             setPets(response.data || []);
+            setFilteredPets(response.data || []); // 초기에는 모든 데이터를 필터링된 목록에 설정
         } catch (error) {
             console.error('유기견 목록 로딩 실패:', error);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleSearch = async () => {
+        setIsSearching(true);
+        try {
+            const params = new URLSearchParams();
+
+            if (searchFilters.foundDate) {
+                params.append('foundDate', searchFilters.foundDate);
+            }
+            if (searchFilters.foundTime) {
+                params.append('foundTime', searchFilters.foundTime);
+            }
+            if (searchFilters.location) {
+                params.append('location', searchFilters.location);
+            }
+
+            const response = await axios.get(`/api/abandoned/abandoned-pets/search?${params.toString()}`, {
+                withCredentials: true
+            });
+
+            setFilteredPets(response.data || []);
+            console.log('검색 결과:', response.data);
+        } catch (error) {
+            console.error('검색 실패:', error);
+            alert('검색 중 오류가 발생했습니다.');
+        } finally {
+            setIsSearching(false);
+        }
+    };
+
+    const handleResetSearch = () => {
+        setSearchFilters({
+            foundDate: '',
+            foundTime: '',
+            location: ''
+        });
+        setFilteredPets(pets); // 원본 데이터로 복원
+    };
+
+    const handleFilterChange = (field, value) => {
+        setSearchFilters(prev => ({
+            ...prev,
+            [field]: value
+        }));
     };
 
     const handleAdoptApply = async (petId) => {
@@ -216,7 +254,6 @@ function AdoptList() {
     if (loading) {
         return (
             <>
-                <Header user={user} />
                 <div className="adopt-loading">
                     <div className="loading-spinner"></div>
                     <p>유기견 목록을 불러오는 중...</p>
@@ -227,22 +264,92 @@ function AdoptList() {
 
     return (
         <>
-            <Header user={user} />
             <div className="adopt-container">
                 <div className="adopt-header">
                     <h1>🐕 유기견 입양</h1>
                     <p>소중한 생명을 구해주세요. 함께 따뜻한 가정을 만들어보세요.</p>
                 </div>
 
-                {pets.length === 0 ? (
+                {/* 검색 필터 섹션 */}
+                <div className="search-filter-section">
+                    <h3>🔍 유기견 검색</h3>
+                    <div className="search-filters">
+                        <div className="filter-group">
+                            <label htmlFor="foundDate">발견 날짜:</label>
+                            <input
+                                type="date"
+                                id="foundDate"
+                                value={searchFilters.foundDate}
+                                onChange={(e) => handleFilterChange('foundDate', e.target.value)}
+                                className="filter-input"
+                            />
+                        </div>
+
+                        <div className="filter-group">
+                            <label htmlFor="foundTime">발견 시간:</label>
+                            <input
+                                type="time"
+                                id="foundTime"
+                                value={searchFilters.foundTime}
+                                onChange={(e) => handleFilterChange('foundTime', e.target.value)}
+                                className="filter-input"
+                            />
+                        </div>
+
+                        <div className="filter-group">
+                            <label htmlFor="location">발견 장소:</label>
+                            <input
+                                type="text"
+                                id="location"
+                                placeholder="예: 서울시 강남구"
+                                value={searchFilters.location}
+                                onChange={(e) => handleFilterChange('location', e.target.value)}
+                                className="filter-input"
+                            />
+                        </div>
+
+                        <div className="filter-buttons">
+                            <button
+                                onClick={handleSearch}
+                                disabled={isSearching}
+                                className="search-btn"
+                            >
+                                {isSearching ? '검색 중...' : '🔍 검색'}
+                            </button>
+                            <button
+                                onClick={handleResetSearch}
+                                className="reset-btn"
+                            >
+                                🔄 초기화
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {filteredPets.length === 0 ? (
                     <div className="no-pets">
                         <div className="no-pets-icon">🐾</div>
-                        <h2>등록된 유기견이 없습니다</h2>
-                        <p>현재 보호중인 유기견이 없습니다.</p>
+                        <h2>
+                            {searchFilters.foundDate || searchFilters.foundTime || searchFilters.location
+                                ? '검색 결과가 없습니다'
+                                : '등록된 유기견이 없습니다'
+                            }
+                        </h2>
+                        <p>
+                            {searchFilters.foundDate || searchFilters.foundTime || searchFilters.location
+                                ? '다른 조건으로 검색해보세요.'
+                                : '현재 보호중인 유기견이 없습니다.'
+                            }
+                        </p>
+                        {(searchFilters.foundDate || searchFilters.foundTime || searchFilters.location) && (
+                            <button onClick={handleResetSearch} className="reset-search-btn">
+                                전체 목록 보기
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="pets-grid">
-                        {pets.map((pet) => (
+                        {filteredPets.map((pet) => (
                             <div key={pet.id} className="pet-card">
                                 <div className="pet-image">
                                     {pet.imageUrl ? (

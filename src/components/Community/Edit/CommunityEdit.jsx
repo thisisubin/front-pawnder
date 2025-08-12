@@ -1,13 +1,11 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Editor } from "@toast-ui/react-editor";
 import axios from "axios";
 import '../Post/CommunityPost.css';
 
 function CommunityEdit() {
     const { postId } = useParams();
     const navigate = useNavigate();
-    const editorRef = useRef();
     const [preview, setPreview] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -43,11 +41,6 @@ function CommunityEdit() {
                     strContent: res.data.strContent || '',
                     imgUrlContent: res.data.imgUrlContent || null
                 });
-
-                // 에디터에 기존 내용 설정
-                if (editorRef.current) {
-                    editorRef.current.getInstance().setMarkdown(res.data.strContent || '');
-                }
 
             } catch (err) {
                 console.error('게시글 로딩 실패:', err);
@@ -114,8 +107,7 @@ function CommunityEdit() {
                 return;
             }
 
-            const markdown = editorRef.current.getInstance().getMarkdown();
-            if (!markdown.trim()) {
+            if (!form.strContent.trim()) {
                 alert('내용을 입력해주세요.');
                 return;
             }
@@ -123,7 +115,7 @@ function CommunityEdit() {
             const dto = {
                 postType: form.postType,
                 title: form.title,
-                strContent: markdown,
+                strContent: form.strContent,
             };
 
             const data = new FormData();
@@ -231,19 +223,23 @@ function CommunityEdit() {
 
                 <div className="form-group">
                     <label>본문 내용 *</label>
-                    <Editor
-                        ref={editorRef}
-                        previewStyle="vertical"
-                        height="400px"
-                        initialEditType="markdown"
+                    <textarea
+                        name="strContent"
+                        value={form.strContent}
+                        onChange={handleChange}
                         placeholder="내용을 작성하세요..."
-                        toolbarItems={[
-                            ['heading', 'bold', 'italic', 'strike'],
-                            ['hr', 'quote'],
-                            ['ul', 'ol', 'task', 'indent', 'outdent'],
-                            ['table', 'image', 'link'],
-                            ['code', 'codeblock']
-                        ]}
+                        rows="15"
+                        required
+                        style={{
+                            width: '100%',
+                            padding: '15px',
+                            border: '2px solid #e0e0e0',
+                            borderRadius: '10px',
+                            fontSize: '1rem',
+                            fontFamily: 'inherit',
+                            resize: 'vertical',
+                            minHeight: '400px'
+                        }}
                     />
                 </div>
 

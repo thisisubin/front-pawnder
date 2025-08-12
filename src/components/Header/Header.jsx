@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/axios';
+import NotificationButton from '../NotificationButton';
 import './Header.css';
 
 function Header({ user, onLogout }) {
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    // 디버깅을 위한 로그
+    console.log('=== Header 컴포넌트 ===');
+    console.log('받은 user prop:', user);
+    console.log('user.loggedIn:', user?.loggedIn);
+    console.log('user.name:', user?.name);
+    console.log('user.username:', user?.username);
+
     const handleLogout = async () => {
         try {
-            await axios.post('/api/users/logout', {}, { withCredentials: true });
+            await api.post('/api/users/logout', {});
             alert('로그아웃 되었습니다.');
             if (onLogout) {
                 onLogout(); // 부모 상태 업데이트
@@ -45,40 +53,44 @@ function Header({ user, onLogout }) {
                         className="menu-btn"
                         onClick={() => handleMenuClick('/pet/register')}
                     >
-                        🐶 반려견 등록
+                        반려견 등록
                     </button>
                     <button
                         className="menu-btn"
                         onClick={() => handleMenuClick('/abandoned/register')}
                     >
-                        🆘 유기견 제보
+                        유기견 제보
                     </button>
                     <button
                         className="menu-btn"
                         onClick={() => handleMenuClick('/adopt')}
                     >
-                        💝 유기견 후원
+                        유기견 후원
                     </button>
                     <button
                         className="menu-btn"
                         onClick={() => handleMenuClick('/community')}
                     >
-                        💬 커뮤니티
+                        커뮤니티
                     </button>
-                    <button
-                        className="menu-btn"
-                        onClick={() => handleMenuClick('/schedule')}
-                    >
-                        📅 일정 관리
-                    </button>
+                    {user && user.loggedIn && user.role !== 'ADMIN' && (
+                        <button
+                            className="menu-btn"
+                            onClick={() => handleMenuClick('/mypage')}
+                        >
+                            마이페이지
+                        </button>
+                    )}
                 </nav>
 
                 <div className="user-info">
-                    {user && user.username ? (
+                    {user && user.loggedIn ? (
                         <>
                             <span className="welcome-text">
-                                안녕하세요, {user.username}님!
+                                안녕하세요, {user.name || user.username}님!
+                                {user.isSocialLogin && <span className="social-badge">소셜</span>}
                             </span>
+                            <NotificationButton userId={user.userId} />
                             <button onClick={handleLogout} className="logout-btn">
                                 로그아웃
                             </button>
@@ -107,32 +119,34 @@ function Header({ user, onLogout }) {
                     className="mobile-menu-btn"
                     onClick={() => handleMenuClick('/pet/register')}
                 >
-                    🐶 반려견 등록
+                    반려견 등록
                 </button>
                 <button
                     className="mobile-menu-btn"
                     onClick={() => handleMenuClick('/abandoned/register')}
                 >
-                    🆘 유기견 제보
+                    유기견 제보
                 </button>
                 <button
                     className="mobile-menu-btn"
                     onClick={() => handleMenuClick('/adopt')}
                 >
-                    💝 유기견 후원
+                    유기견 후원
                 </button>
                 <button
                     className="mobile-menu-btn"
                     onClick={() => handleMenuClick('/community')}
                 >
-                    💬 커뮤니티
+                    커뮤니티
                 </button>
-                <button
-                    className="mobile-menu-btn"
-                    onClick={() => handleMenuClick('/schedule')}
-                >
-                    📅 일정 관리
-                </button>
+                {user && user.loggedIn && user.role !== 'ADMIN' && (
+                    <button
+                        className="mobile-menu-btn"
+                        onClick={() => handleMenuClick('/mypage')}
+                    >
+                        마이페이지
+                    </button>
+                )}
             </nav>
         </header>
     );

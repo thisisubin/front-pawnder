@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Header from '../Header/Header';
 import './MyPetProfile.css';
 
-function MyPetProfile({ onLogout }) {
+function MyPetProfile() {
     const [petProfiles, setPetProfiles] = useState([]); // 단일 객체에서 배열로 변경
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -255,84 +254,72 @@ function MyPetProfile({ onLogout }) {
 
     if (isLoading) {
         return (
-            <>
-                <Header user={user} onLogout={onLogout} />
-                <div className="mypet-profile-container">
-                    <div className="mypet-profile-card">
-                        <div className="loading-spinner-large"></div>
-                        <p>프로필을 불러오는 중...</p>
-                    </div>
+            <div className="mypet-profile-container">
+                <div className="mypet-profile-card">
+                    <div className="loading-spinner-large"></div>
+                    <p>프로필을 불러오는 중...</p>
                 </div>
-            </>
+            </div>
         );
     }
 
     if (error) {
         return (
-            <>
-                <Header user={user} onLogout={onLogout} />
-                <div className="mypet-profile-container">
-                    <div className="mypet-profile-card">
-                        <div className="error-message-large">{error}</div>
-                        <button onClick={fetchPetProfile} className="retry-btn">
-                            다시 시도
-                        </button>
-                    </div>
+            <div className="mypet-profile-container">
+                <div className="mypet-profile-card">
+                    <div className="error-message-large">{error}</div>
+                    <button onClick={fetchPetProfile} className="retry-btn">
+                        다시 시도
+                    </button>
                 </div>
-            </>
+            </div>
         );
     }
 
     if (!petProfiles || petProfiles.length === 0) {
         return (
-            <>
-                <Header user={user} onLogout={onLogout} />
-                <div className="mypet-profile-container">
-                    <div className="mypet-profile-card">
-                        <div className="no-profile">
-                            <div className="paw-icon">🐾</div>
-                            <h2>등록된 반려견이 없습니다</h2>
-                            <p>아직 반려견 프로필을 등록하지 않으셨네요.</p>
-                            <button onClick={() => window.location.href = '/mypet/register'} className="register-btn">
-                                반려견 등록하기
-                            </button>
-                        </div>
+            <div className="mypet-profile-container">
+                <div className="mypet-profile-card">
+                    <div className="no-profile">
+                        <div className="paw-icon">🐾</div>
+                        <h2>등록된 반려견이 없습니다</h2>
+                        <p>아직 반려견 프로필을 등록하지 않으셨네요.</p>
+                        <button onClick={() => window.location.href = '/mypet/register'} className="register-btn">
+                            반려견 등록하기
+                        </button>
                     </div>
                 </div>
-            </>
+            </div>
         );
     }
 
     return (
-        <>
-            <Header user={user} onLogout={onLogout} />
-            <div className="mypet-profile-container">
-                <div className="profile-header">
-                    <div className="paw-icon">🐾</div>
-                    <h2>나의 반려견 프로필</h2>
-                    <p>총 {petProfiles.length}마리의 반려견이 등록되어 있습니다</p>
-                </div>
-
-                <div className="pets-grid">
-                    {petProfiles.map((petProfile, index) => (
-                        <PetProfileCard
-                            key={petProfile.petId}
-                            petProfile={petProfile}
-                            index={index}
-                        />
-                    ))}
-                </div>
-
-                <div className="global-actions">
-                    <button
-                        onClick={() => window.location.href = '/pet/register'}
-                        className="register-btn"
-                    >
-                        새로운 반려견 등록
-                    </button>
-                </div>
+        <div className="mypet-profile-container">
+            <div className="profile-header">
+                <div className="paw-icon">🐾</div>
+                <h2>나의 반려견 프로필</h2>
+                <p>총 {petProfiles.length}마리의 반려견이 등록되어 있습니다</p>
             </div>
-        </>
+
+            <div className="pets-grid">
+                {petProfiles.map((petProfile, index) => (
+                    <PetProfileCard
+                        key={petProfile.petId}
+                        petProfile={petProfile}
+                        index={index}
+                    />
+                ))}
+            </div>
+
+            <div className="global-actions">
+                <button
+                    onClick={() => window.location.href = '/pet/register'}
+                    className="register-btn"
+                >
+                    새로운 반려견 등록
+                </button>
+            </div>
+        </div>
     );
 }
 

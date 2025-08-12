@@ -1,9 +1,9 @@
 import React from 'react';
 import AbandonedPetForm from '../components/Abandon/AbandonedPetForm';
 
-function AbandonedPetPage() {
+function AbandonedPetPage({ user }) {
     return (
-        <AbandonedPetForm />
+        <AbandonedPetForm user={user} />
     );
 }
 

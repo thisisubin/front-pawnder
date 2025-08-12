@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useRef } from 'react';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 import './MyPetForm.css';
 
-function MyPetForm() {
+function MyPetForm({ user }) {
     const [form, setForm] = useState({
         name: '',
         profile: null,
@@ -17,6 +18,26 @@ function MyPetForm() {
     });
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+
+    // 컴포넌트 마운트 시 사용자 정보 확인
+    // useEffect(() => {
+    //     const checkUserSession = async () => {
+    //         try {
+    //             const response = await axios.get('/api/users/check-session', { withCredentials: true });
+    //             // setUser(response.data); // This line is removed as per the new_code
+    //             console.log('MyPetForm - 사용자 정보:', response.data);
+    //         } catch (error) {
+    //             console.error('MyPetForm - 세션 확인 실패:', error);
+    //             if (error.response?.status === 401) {
+    //                 alert('로그인이 필요합니다.');
+    //                 navigate('/login');
+    //             }
+    //         }
+    //     };
+
+    //     checkUserSession();
+    // }, [navigate]);
 
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
@@ -118,6 +139,12 @@ function MyPetForm() {
         e.preventDefault();
         console.log("handleSubmit called");
 
+        // 로그인 상태 확인
+        if (!user || !user.loggedIn) {
+            alert('반려견을 등록하려면 로그인이 필요합니다.');
+            return;
+        }
+
         if (!validateForm()) {
             console.log("유효성 검사 실패", errors);
             return;
@@ -167,6 +194,36 @@ function MyPetForm() {
 
         } catch (error) {
             console.error("등록 실패:", error);
+
+            // 소셜 로그인 사용자인지 확인
+            const isSocialUser = user?.provider || user?.socialId;
+            console.log('MyPetForm - 소셜 로그인 사용자 여부:', isSocialUser);
+
+            if (error.response?.status === 401) {
+                console.log('MyPetForm - 401 에러 발생');
+
+                if (isSocialUser) {
+                    console.log('소셜 로그인 사용자 401 에러 - 세션 재확인 시도');
+                    try {
+                        const sessionCheck = await axios.get('/api/users/check-session', { withCredentials: true });
+                        if (sessionCheck.data) {
+                            console.log('세션 재확인 성공, 다시 등록 시도');
+                            // 세션이 유효하면 다시 등록 시도
+                            setTimeout(() => {
+                                handleSubmit(e);
+                            }, 1000);
+                            return;
+                        }
+                    } catch (sessionError) {
+                        console.error('세션 재확인 실패:', sessionError);
+                    }
+                }
+
+                alert('로그인이 필요합니다. 다시 로그인해주세요.');
+                navigate('/login');
+                return;
+            }
+
             const errorMessage = error.response?.data?.message ||
                 error.response?.data ||
                 "오류가 발생했습니다.";
@@ -183,6 +240,48 @@ function MyPetForm() {
                     <div className="paw-icon">🐾</div>
                     <h2>나의 반려견 프로필</h2>
                     <p>소중한 반려견의 정보를 등록해주세요</p>
+
+                    {/* 소셜 로그인 사용자 디버깅 정보 */}
+                    {user && (user.provider || user.socialId) && (
+                        <div style={{
+                            background: '#f0f8ff',
+                            padding: '10px',
+                            margin: '10px 0',
+                            borderRadius: '5px',
+                            fontSize: '14px',
+                            color: '#333'
+                        }}>
+                            <strong>소셜 로그인 사용자 정보:</strong><br />
+                            제공자: {user.provider || '알 수 없음'}<br />
+                            소셜 ID: {user.socialId || '없음'}<br />
+                            사용자 ID: {user.userId || '없음'}<br />
+                            <button
+                                onClick={async () => {
+                                    try {
+                                        const response = await axios.get('/api/users/check-session', { withCredentials: true });
+                                        console.log('세션 갱신 성공:', response.data);
+                                        alert('세션이 갱신되었습니다!');
+                                        window.location.reload();
+                                    } catch (error) {
+                                        console.error('세션 갱신 실패:', error);
+                                        alert('세션 갱신에 실패했습니다.');
+                                    }
+                                }}
+                                style={{
+                                    marginTop: '5px',
+                                    padding: '5px 10px',
+                                    fontSize: '12px',
+                                    background: '#007bff',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '3px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                세션 갱신
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <form onSubmit={handleSubmit} className="mypet-form">

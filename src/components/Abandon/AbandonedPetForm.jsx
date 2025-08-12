@@ -3,37 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import './AbandonedPetForm.css';
 import KakaoMap from "../../pages/KakaoMap";
-import Header from "../Header/Header";
 
-
-function AbandonedPetForm() {
+function AbandonedPetForm({ user }) {
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
     const [predictedBreed, setPredictedBreed] = useState('');
     const [isPredicting, setIsPredicting] = useState(false);
-
-    useEffect(() => {
-        // 사용자 정보 가져오기
-        const fetchUserData = async () => {
-            try {
-                const userResponse = await axios.get('/api/users/check-session', { withCredentials: true });
-                setUser(userResponse.data);
-            } catch (error) {
-                console.error('데이터 로딩 실패:', error);
-                if (error.response?.status === 401) {
-                    alert('로그인이 필요합니다.');
-                    navigate('/login');
-                }
-            }
-        };
-        fetchUserData();
-    }, [navigate]);
-
-    const handleLogout = () => {
-        // 로그아웃 처리
-        setUser(null);
-        navigate('/login');
-    };
 
     const [form, setForm] = useState({
         latitude: '',
@@ -164,6 +138,12 @@ function AbandonedPetForm() {
         e.preventDefault();
         console.log("handleSubmit called");
 
+        // 로그인 상태 확인
+        if (!user || !user.loggedIn) {
+            alert('유기견을 제보하려면 로그인이 필요합니다.');
+            return;
+        }
+
         if (!validateForm()) {
             console.log("유효성 검사 실패", errors);
             return;
@@ -218,8 +198,6 @@ function AbandonedPetForm() {
 
     return (
         <div className="abandonedpet-container">
-            <Header user={user} onLogout={handleLogout} />
-
             <div className="abandonedpet-content">
                 <div className="abandonedpet-card">
                     <div className="paw-icon">🚨</div>

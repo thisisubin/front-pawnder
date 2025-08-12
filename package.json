@@ -4,11 +4,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@stomp/stompjs": "^7.1.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^13.5.0",
-    "@toast-ui/editor": "^3.2.2",
-    "@toast-ui/react-editor": "^3.2.3",
     "ajv": "^6.12.6",
     "ajv-keywords": "^3.5.2",
     "axios": "^1.10.0",
@@ -17,6 +16,9 @@
     "react-modal": "^3.16.3",
     "react-router-dom": "^6.8.0",
     "react-scripts": "^5.0.1",
+    "recharts": "^3.1.2",
+    "socket.io-client": "^4.8.1",
+    "sockjs-client": "^1.6.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -50,7 +52,7 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!(axios)/)"
     ]
-  },  
+  },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",

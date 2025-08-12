@@ -27,7 +27,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #667eea, #764ba2, #5a6fd8, #6a4190);
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
 }
 
 .form-header {
@@ -74,7 +74,7 @@
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 10px 0;
-    background: linear-gradient(45deg, #667eea, #764ba2);
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -118,9 +118,9 @@
 
 .form-group input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #4ecdc4;
     background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
     transform: translateY(-2px);
 }
 
@@ -142,7 +142,7 @@
 }
 
 .success-message {
-    color: #28a745;
+    color: #4ecdc4;
     font-size: 0.8rem;
     font-weight: 500;
     margin-top: 5px;
@@ -156,12 +156,11 @@
 }
 
 .email-input-group input {
-    flex: 2;
-    min-width: 200px;
+    flex: 1;
 }
 
 .send-code-btn {
-    background: linear-gradient(45deg, #667eea, #764ba2);
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
     color: white;
     border: none;
     padding: 15px 20px;
@@ -172,12 +171,11 @@
     transition: all 0.3s ease;
     white-space: nowrap;
     min-width: 120px;
-    flex: 1;
 }
 
 .send-code-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
 }
 
 .send-code-btn:active:not(:disabled) {
@@ -191,7 +189,7 @@
 }
 
 .send-code-btn.verified {
-    background: linear-gradient(45deg, #28a745, #20c997);
+    background: linear-gradient(45deg, #96ceb4, #4ecdc4);
     color: white;
 }
 
@@ -210,7 +208,7 @@
 }
 
 .verify-code-btn {
-    background: linear-gradient(45deg, #667eea, #764ba2);
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
     color: white;
     border: none;
     padding: 15px 20px;
@@ -225,7 +223,7 @@
 
 .verify-code-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
 }
 
 .verify-code-btn:active:not(:disabled) {
@@ -259,7 +257,7 @@
 }
 
 .submit-btn {
-    background: linear-gradient(45deg, #667eea, #764ba2);
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
     color: white;
     border: none;
     padding: 16px;
@@ -275,7 +273,7 @@
 
 .submit-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
 }
 
 .submit-btn:active {
@@ -323,14 +321,14 @@
 }
 
 .signup-footer a {
-    color: #667eea;
+    color: #4ecdc4;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .signup-footer a:hover {
-    color: #5a6fd8;
+    color: #ff6b6b;
     text-decoration: underline;
 }
 
@@ -368,18 +366,10 @@
         gap: 8px;
     }
 
-    .email-input-group input {
-        flex: none;
-        min-width: auto;
-        width: 100%;
-    }
-
     .send-code-btn {
         padding: 12px 16px;
         font-size: 0.85rem;
         min-width: auto;
-        flex: none;
-        width: 100%;
     }
 
     .verification-input-group {
@@ -387,28 +377,23 @@
         gap: 8px;
     }
 
-    .verification-input-group input {
-        flex: none;
-        width: 100%;
-    }
-
     .verify-code-btn {
         padding: 12px 16px;
         font-size: 0.85rem;
         min-width: auto;
-        flex: none;
-        width: 100%;
     }
 }
 
+
+
 /* 접근성 개선 */
 .form-group input:focus-visible {
-    outline: 2px solid #667eea;
+    outline: 2px solid #4ecdc4;
     outline-offset: 2px;
 }
 
 .submit-btn:focus-visible {
-    outline: 2px solid #667eea;
+    outline: 2px solid #4ecdc4;
     outline-offset: 2px;
 }
 
@@ -472,28 +457,4 @@
         opacity: 1;
         transform: translateX(0);
     }
-}
-
-.timer-container {
-    margin-top: 8px;
-    text-align: center;
-}
-
-.timer-text {
-    color: #667eea;
-    font-weight: 600;
-    font-size: 0.95rem;
-    white-space: nowrap;
-    letter-spacing: 0.5px;
-    display: inline-block;
-    padding: 4px 8px;
-    background: rgba(102, 126, 234, 0.1);
-    border-radius: 6px;
-    border: 1px solid rgba(102, 126, 234, 0.2);
-}
-
-.timer-text.expired {
-    color: #ff6b6b;
-    background: rgba(255, 107, 107, 0.1);
-    border-color: rgba(255, 107, 107, 0.2);
 }

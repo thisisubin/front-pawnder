@@ -431,60 +431,7 @@
     }
 }
 
-/* ===== 다크 모드 지원 ===== */
-@media (prefers-color-scheme: dark) {
 
-    .communityPost-card,
-    .communityPost {
-        background: #1a1a1a;
-        color: #fff;
-    }
-
-    .communityPost-card h2 {
-        color: #fff;
-    }
-
-    .communityPost-card p {
-        color: #ccc;
-    }
-
-    .form-group label {
-        color: #fff;
-    }
-
-    .form-group input,
-    .form-group select {
-        background: #2a2a2a;
-        border-color: #444;
-        color: #fff;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-        background: #333;
-    }
-
-    .communityPost .toastui-editor-defaultUI {
-        border-color: #444 !important;
-    }
-
-    .communityPost .toastui-editor-toolbar {
-        background: #2a2a2a !important;
-        border-bottom-color: #444 !important;
-    }
-
-    .communityPost .toastui-editor-main {
-        background: #1a1a1a !important;
-    }
-
-    .communityPost .toastui-editor-md-container {
-        background: #1a1a1a !important;
-    }
-
-    .communityPost .toastui-editor-md-preview {
-        background: #2a2a2a !important;
-    }
-}
 
 /* ===== 좋아요 섹션 ===== */
 .like-section {
@@ -692,5 +639,3 @@
         margin: 20px 0;
     }
 }
-
-

@@ -1,11 +1,10 @@
-// src/components/SignUp/SignUpForm.jsx
-
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Header from '../Header/Header';
 import './SignUpForm.css';
 
-function SignUpForm() {
+function SignUpForm({ user }) {
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         name: '',
         userId: '',
@@ -25,29 +24,12 @@ function SignUpForm() {
     const [codeSent, setCodeSent] = useState(false);
     const [timer, setTimer] = useState(0);
     const timerRef = useRef(null);
-    const [user, setUser] = useState(null);
-
-    // 사용자 정보 가져오기
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const userResponse = await axios.get('/api/users/check-session', {
-                    withCredentials: true
-                });
-                setUser(userResponse.data);
-            } catch (error) {
-                console.error('사용자 정보 로딩 실패:', error);
-            }
-        };
-        fetchUserData();
-    }, []);
 
     const handleChange = (e) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value
         });
-        // 에러 메시지 초기화
         if (errors[e.target.name]) {
             setErrors({
                 ...errors,
@@ -115,41 +97,44 @@ function SignUpForm() {
         setIsSendingCode(true);
 
         try {
-            // 백엔드로 인증번호 발송 요청
             const response = await axios.post('/api/users/send-email', null, {
                 params: { email: form.email },
                 withCredentials: true
             });
-            alert('인증번호가 이메일로 발송되었습니다! 📧');
+
+            console.log('인증번호가 이메일로 발송되었습니다! 📧');
             setCodeSent(true);
-            setEmailVerified(false); // 인증번호 발송 시 인증 상태 초기화
+            setEmailVerified(false);
 
-            // 타이머 시작
-            console.log('타이머 시작: 120초');
-            setTimer(120); // 2분(120초)
-
-            // 기존 타이머 정리
             if (timerRef.current) {
                 clearInterval(timerRef.current);
-                timerRef.current = null;
             }
 
-            // 새 타이머 시작
+            console.log('타이머 시작: 120초');
+            setTimer(120);
+
             timerRef.current = setInterval(() => {
                 setTimer(prev => {
-                    console.log('타이머 업데이트:', prev - 1);
-                    if (prev <= 1) {
+                    const newTime = prev - 1;
+                    if (newTime <= 0) {
                         clearInterval(timerRef.current);
                         timerRef.current = null;
                         return 0;
                     }
-                    return prev - 1;
+                    console.log('타이머 업데이트:', newTime);
+                    return newTime;
                 });
             }, 1000);
 
         } catch (error) {
-            console.error(error);
-            alert('인증번호 발송에 실패했습니다: ' + (error.response?.data || '오류가 발생했습니다'));
+            console.error('이메일 발송 실패:', error);
+            console.error('에러 상세:', error.response?.data);
+            console.error('에러 상태:', error.response?.status);
+
+            console.log('에러로 인해 타이머 시작 안함');
+
+            const errorMessage = error.response?.data?.message || error.response?.data || error.message || '알 수 없는 오류가 발생했습니다';
+            console.log('인증번호 발송에 실패했습니다: ' + errorMessage);
         } finally {
             setIsSendingCode(false);
         }
@@ -164,16 +149,15 @@ function SignUpForm() {
         setIsVerifyingCode(true);
 
         try {
-            // 백엔드로 인증번호 확인 요청
             const response = await axios.post('/api/users/verify-email', null, {
                 params: { code: verificationCode }
             });
-            alert('이메일 인증이 완료되었습니다! ✅');
+            console.log('이메일 인증이 완료되었습니다! ✅');
             setEmailVerified(true);
-            setVerificationCode(''); // 인증번호 입력칸 초기화
+            setVerificationCode('');
         } catch (error) {
             console.error(error);
-            alert('인증번호가 올바르지 않습니다: ' + (error.response?.data || '오류가 발생했습니다'));
+            console.log('인증번호가 올바르지 않습니다: ' + (error.response?.data || '오류가 발생했습니다'));
         } finally {
             setIsVerifyingCode(false);
         }
@@ -182,20 +166,20 @@ function SignUpForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("🟡 handleSubmit called"); // ← 이거 확인
+        console.log("🟡 handleSubmit called");
         if (!validateForm()) {
-            console.log("🔴 유효성 검사 실패", errors); // ← 여기서 막히는지
+            console.log("유효성 검사 실패", errors);
             return;
         }
 
         setIsLoading(true);
-        console.log("🟢 유효성 통과, 서버에 전송 시작");
+        console.log("유효성 통과, 서버에 전송 시작");
 
         try {
             const { confirmPassword, ...sendForm } = form;
 
             const response = await axios.post('/api/users/signup', sendForm);
-            alert('회원가입이 완료되었습니다! 🐕');
+            console.log('회원가입이 완료되었습니다! 🐕');
 
             setForm({
                 name: '',
@@ -206,31 +190,37 @@ function SignUpForm() {
                 birth: '',
                 phoneNm: '',
             });
+
+            navigate('/login');
         } catch (error) {
             console.error(error);
-            alert("회원가입 실패: " + (error.response?.data || "오류가 발생했습니다"));
+            console.log("회원가입 실패: " + (error.response?.data || "오류가 발생했습니다"));
         } finally {
             setIsLoading(false);
         }
     };
 
-    // 인증 성공/실패/컴포넌트 언마운트 시 타이머 정리
+    // 컴포넌트 언마운트 시 타이머 정리
     useEffect(() => {
-        if (emailVerified || !codeSent) {
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+            }
+        };
+    }, []);
+
+    // 이메일 인증이 완료되면 타이머 정리
+    useEffect(() => {
+        if (emailVerified) {
             if (timerRef.current) {
                 clearInterval(timerRef.current);
                 timerRef.current = null;
             }
         }
-        return () => {
-            if (timerRef.current) clearInterval(timerRef.current);
-        };
-    }, [emailVerified, codeSent]);
-
+    }, [emailVerified]);
 
     return (
         <>
-            <Header user={user} />
             <div className="signup-container">
                 <div className="signup-card">
                     <div className="form-header">
@@ -424,4 +414,4 @@ function SignUpForm() {
     );
 }
 
-export default SignUpForm; 
+export default SignUpForm;

@@ -17,10 +17,11 @@ function CommunityDetail() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // 로그인한 사용자 정보 가져오기
+        // 로그인한 사용자 정보 가져오기 (일반 로그인 + 소셜로그인)
         const fetchUserData = async () => {
             try {
                 const userResponse = await axios.get('/api/users/check-session', { withCredentials: true });
+                console.log('사용자 정보:', userResponse.data);
                 setUser(userResponse.data);
             } catch (error) {
                 console.error('사용자 정보 로딩 실패:', error);
@@ -81,19 +82,29 @@ function CommunityDetail() {
 
     // 좋아요 토글
     const handleLikeToggle = async () => {
+        // 로그인 상태 확인
+        if (!user || !user.loggedIn) {
+            alert('좋아요를 누르려면 로그인이 필요합니다.');
+            return;
+        }
+
         try {
-            const response = await axios.post(`/api/community/like/${postId}`, { postId }, {
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+            const response = await axios.post(`/api/community/like/${postId}/toggle`, null, {
                 withCredentials: true
             });
             setIsLiked(response.data.isLiked);
             setLikeCount(response.data.likeCount);
         } catch (error) {
             console.error('좋아요 토글 실패:', error);
-            alert('로그인된 유저만 좋아요를 누를 수 있습니다.');
+            console.error('에러 응답:', error.response?.data);
+
+            if (error.response?.status === 401) {
+                alert('로그인이 필요합니다. 다시 로그인해주세요.');
+            } else if (error.response?.status === 400) {
+                alert('좋아요 처리 중 오류가 발생했습니다: ' + (error.response?.data?.error || error.message));
+            } else {
+                alert('좋아요 처리 중 오류가 발생했습니다.');
+            }
         }
     };
 
@@ -147,8 +158,12 @@ function CommunityDetail() {
         return <div className="community-get-empty">게시글을 찾을 수 없습니다.</div>;
     }
 
-    // 로그인한 사용자와 글 작성자가 같은지 확인
-    const isAuthor = user && post.userId && user.username === post.userId;
+    // 로그인한 사용자와 글 작성자가 같은지 확인 (일반 로그인 + 소셜로그인)
+    const isAuthor = user && post.userId && user.loggedIn && (
+        user.userId === post.userId ||
+        user.username === post.userId ||
+        user.email === post.userId
+    );
 
     return (
         <div className="community-detail-container">
@@ -188,25 +203,36 @@ function CommunityDetail() {
                                 type="button"
                                 className={`like-btn ${isLiked ? 'liked' : ''}`}
                                 onClick={handleLikeToggle}
+                                title={isLiked ? '좋아요 취소' : '좋아요'}
                             >
                                 <span className="like-icon">
                                     {isLiked ? (
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#ed4956">
                                             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                         </svg>
                                     ) : (
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                                         </svg>
                                     )}
                                 </span>
-                                {likeCount > 0 && <span className="like-count">({likeCount})</span>}
                             </button>
+                            {likeCount > 0 && (
+                                <div className="like-count-text">
+                                    좋아요 <strong>{likeCount}</strong>개
+                                </div>
+                            )}
 
                             <button
                                 type="button"
                                 className="comment-btn"
-                                onClick={() => setShowCommentInput(!showCommentInput)}
+                                onClick={() => {
+                                    if (!user || !user.loggedIn) {
+                                        alert('댓글을 작성하려면 로그인이 필요합니다.');
+                                        return;
+                                    }
+                                    setShowCommentInput(!showCommentInput);
+                                }}
                             >
                                 <span className="comment-icon">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -2,7 +2,7 @@
 import React from 'react';
 import CommunityMain from '../components/Community/Main/CommunityMain';
 
-function CommunityPage() {
-  return <CommunityMain />;
+function CommunityPage({ user }) {
+  return <CommunityMain user={user} />;
 }
 export default CommunityPage;

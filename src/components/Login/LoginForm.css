@@ -254,37 +254,7 @@
     }
 }
 
-/* 다크 모드 지원 */
-@media (prefers-color-scheme: dark) {
 
-    .signup-header,
-    .login-form {
-        background: #2d3748;
-        color: white;
-    }
-
-    .signup-header h2 {
-        color: white;
-    }
-
-    .signup-header p {
-        color: #a0aec0;
-    }
-
-    .form-group label {
-        color: #e2e8f0;
-    }
-
-    .form-group input {
-        background: #4a5568;
-        border-color: #718096;
-        color: white;
-    }
-
-    .form-group input:focus {
-        background: #2d3748;
-    }
-}
 
 /* 접근성 개선 */
 .form-group input:focus-visible {
@@ -359,4 +329,106 @@
 .login-footer a:hover {
     color: #ff6b6b;
     text-decoration: underline;
+}
+
+/* 소셜 로그인 구분선 */
+.social-login-divider {
+    position: relative;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.social-login-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e1e5e9;
+}
+
+.social-login-divider span {
+    background: white;
+    padding: 0 15px;
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 소셜 로그인 버튼들 */
+.social-login-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.social-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border: 2px solid #e1e5e9;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    color: #333;
+    width: 100%;
+}
+
+.social-login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.social-icon {
+    font-size: 1.2rem;
+}
+
+.social-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+/* 카카오 로그인 버튼 */
+.kakao-btn {
+    border-color: #FEE500;
+    background: #FEE500;
+    color: #000;
+}
+
+.kakao-btn:hover {
+    background: #FDD835;
+    border-color: #FDD835;
+}
+
+/* 구글 로그인 버튼 */
+.google-btn {
+    border-color: #4285F4;
+    background: #4285F4;
+    color: white;
+}
+
+.google-btn:hover {
+    background: #3367D6;
+    border-color: #3367D6;
+}
+
+/* 네이버 로그인 버튼 */
+.naver-btn {
+    border-color: #03C75A;
+    background: #03C75A;
+    color: white;
+}
+
+.naver-btn:hover {
+    background: #02B351;
+    border-color: #02B351;
 }
