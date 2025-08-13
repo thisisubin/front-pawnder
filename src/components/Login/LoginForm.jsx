@@ -78,9 +78,9 @@ function LoginForm({ user, onLoginSuccess }) {
         try {
             // Spring Security OAuth2 소셜 로그인 URL로 리다이렉트
             const socialLoginUrls = {
-                kakao: 'http://localhost:8080/oauth2/authorization/kakao',
-                google: 'http://localhost:8080/oauth2/authorization/google',
-                naver: 'http://localhost:8080/oauth2/authorization/naver',
+                kakao: 'https://pawnder.site/oauth2/authorization/kakao',
+                google: 'https://pawnder.site/oauth2/authorization/google',
+                naver: 'https://pawnder.site/oauth2/authorization/naver',
             };
 
             const loginUrl = socialLoginUrls[provider];

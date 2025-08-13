@@ -27,11 +27,24 @@
     cursor: pointer;
     transition: all 0.3s ease;
     user-select: none;
+    /* 모바일에서 터치 영역 명확화 */
+    padding: 10px;
+    margin: -10px;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1002;
+    /* 다른 요소들보다 위에 위치 */
 }
 
 .main-title:hover {
     transform: scale(1.05);
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.main-title:active {
+    transform: scale(0.98);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* 데스크톱 메뉴 */
@@ -235,7 +248,8 @@
     top: 100%;
     left: 0;
     right: 0;
-    z-index: 999;
+    z-index: 1001;
+    /* 로고보다 낮은 z-index */
 }
 
 .mobile-menu.open {
@@ -277,6 +291,8 @@
 
     .mobile-menu-toggle {
         display: flex !important;
+        z-index: 1003;
+        /* 로고보다 높은 z-index */
     }
 
     .mobile-menu {
@@ -288,12 +304,37 @@
         gap: 10px;
         align-items: center;
         padding: 0 15px;
+        /* 모바일에서 요소들 간격 조정 */
+        justify-content: space-between;
     }
 
     .main-title {
         font-size: 1.4rem;
         flex: 1;
         text-align: left;
+        padding: 12px;
+        margin: -12px;
+        /* 모바일에서 터치 영역 확대 */
+        min-height: 44px;
+        /* iOS 권장 터치 영역 */
+        display: flex;
+        align-items: center;
+        /* 다른 요소들과 겹치지 않도록 */
+        position: relative;
+        z-index: 1002;
+        /* 모바일에서 로고 영역 확보 */
+        margin-right: 10px;
+    }
+
+    .main-title::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: transparent;
+        z-index: -1;
     }
 
     .user-info {
@@ -301,6 +342,8 @@
         gap: 8px;
         align-items: center;
         flex-shrink: 0;
+        /* 모바일에서 사용자 정보 영역 확보 */
+        z-index: 1001;
     }
 
     .welcome-text {
@@ -320,6 +363,12 @@
         font-size: 0.8rem;
         white-space: nowrap;
     }
+
+    /* 모바일에서 햄버거 메뉴 버튼 위치 조정 */
+    .mobile-menu-toggle {
+        margin-left: auto;
+        flex-shrink: 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -330,14 +379,26 @@
     .header-content {
         padding: 0 10px;
         gap: 8px;
+        /* 작은 화면에서 요소 배치 최적화 */
+        flex-wrap: nowrap;
+        align-items: center;
     }
 
     .main-title {
         font-size: 1.2rem;
+        /* 작은 화면에서 로고 영역 확보 */
+        flex: 1;
+        min-width: 0;
+        padding: 10px;
+        margin: -10px;
+        margin-right: 8px;
     }
 
     .user-info {
         gap: 6px;
+        /* 작은 화면에서 사용자 정보 영역 최소화 */
+        flex-shrink: 0;
+        min-width: 0;
     }
 
     .auth-buttons {
@@ -349,12 +410,18 @@
     .signup-btn {
         padding: 5px 8px;
         font-size: 0.75rem;
+        /* 작은 화면에서 버튼 크기 조정 */
+        min-width: 0;
+        white-space: nowrap;
     }
 
     .mobile-menu-toggle {
         width: 36px;
         height: 36px;
         padding: 6px;
+        /* 작은 화면에서 햄버거 메뉴 버튼 위치 고정 */
+        margin-left: auto;
+        flex-shrink: 0;
     }
 
     .hamburger {
@@ -374,5 +441,17 @@
 
     .hamburger::after {
         bottom: -6px;
+    }
+
+    /* 작은 화면에서 로고 클릭 영역 보장 */
+    .main-title::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: transparent;
+        z-index: -1;
     }
 }

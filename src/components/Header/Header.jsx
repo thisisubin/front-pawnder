@@ -40,10 +40,22 @@ function Header({ user, onLogout }) {
         setIsMenuOpen(false); // 메뉴 클릭 시 토글 닫기
     };
 
+    // 로고 클릭 핸들러를 별도 함수로 분리
+    const handleLogoClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('로고 클릭됨 - 홈페이지로 이동');
+        navigate('/');
+    };
+
     return (
         <header className="main-header">
             <div className="header-content">
-                <h1 className="main-title" onClick={() => navigate('/')}>
+                <h1
+                    className="main-title"
+                    onClick={handleLogoClick}
+                    onTouchStart={(e) => e.preventDefault()} // 모바일 터치 이벤트 최적화
+                >
                     🐾 Pawnder
                 </h1>
 
