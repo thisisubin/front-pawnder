@@ -6,7 +6,7 @@ module.exports = function (app) {
     app.use(
         '/api',
         createProxyMiddleware({
-            target: 'https://pawnder.site',
+            target: 'http://localhost:8080',
             changeOrigin: true,
         })
     );
