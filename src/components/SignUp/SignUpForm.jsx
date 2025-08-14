@@ -99,7 +99,6 @@ function SignUpForm({ user }) {
         try {
             const response = await axios.post('/api/users/send-email', null, {
                 params: { email: form.email },
-                withCredentials: true
             });
 
             console.log('인증번호가 이메일로 발송되었습니다! 📧');
