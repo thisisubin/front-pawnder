@@ -22,7 +22,7 @@ import MyPage from './components/MyPage/MyPage';
 
 function App() {
   const [user, setUser] = useState(null);
-
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -51,6 +51,8 @@ function App() {
         console.log('에러 상세:', e.response?.data);
         setUser({ loggedIn: false });
         window.userRole = null;
+      } finally {
+        setLoading(false); // 로딩 종료
       }
     };
     fetchUser();
@@ -122,6 +124,11 @@ function App() {
       window.userRole = null;
     }
   };
+  // 🔹 로딩 중이면 화면 표시 안함
+  if (loading) {
+    return <div>로딩중...</div>; // 원하면 스피너 컴포넌트로 교체 가능
+  }
+
 
   return (
     <Router>
