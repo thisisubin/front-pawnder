@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 function KakaoMap({ onSelectLocation, latitude, longitude }) {
     useEffect(() => {
         const script = document.createElement("script");
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=0002645a847652028848c550afe30640&autoload=false&libraries=services`;
+        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=0002645a847652028848c550afe30640&autoload=false&libraries=services`;
         script.async = true;
 
         script.onload = () => {
