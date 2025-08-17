@@ -5,7 +5,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 // axios 인스턴스 생성
 const api = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: API_BASE_URL, //https로 변경
     withCredentials: true,
     timeout: 10000,
 });
