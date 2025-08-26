@@ -250,11 +250,13 @@
     right: 0;
     z-index: 1001;
     /* 로고보다 낮은 z-index */
+    pointer-events: none;   /* ← 추가 */
 }
 
 .mobile-menu.open {
     transform: translateY(0);
     opacity: 1;
+    pointer-events: auto;   /* ← 추가 */
 }
 
 .mobile-menu-btn {

@@ -198,8 +198,8 @@
 
 .pet-description {
     color: #333;
-    max-width: 200px;
-    min-width: 150px;
+    max-width: fit-content;
+    min-width: fit-content;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -650,8 +650,8 @@
     }
 
     .pet-description {
-        max-width: 150px;
-        min-width: 120px;
+        max-width: fit-content;
+        min-width: auto;
     }
 }
 
@@ -689,8 +689,8 @@
     }
 
     .pet-description {
-        max-width: 120px;
-        min-width: 100px;
+        max-width: fit-content;
+        min-width: fit-content;
     }
 
     .modal-content {
