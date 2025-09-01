@@ -9,7 +9,7 @@
 - GitHub Secrets에 다음을 추가하세요:
   - `EC2_HOST`: EC2 인스턴스의 퍼블릭 IP 주소
   - `EC2_SSH_KEY`: EC2 접속용 SSH 프라이빗 키
-  - `BACKEND_API_URL`: 백엔드 서버의 퍼블릭 IP 주소 (예: `http://13.124.45.67:8080`)
+  - `BACKEND_API_URL`: 백엔드 서버의 퍼블릭 IP 주소
 
 ## 🛠️ 로컬 개발
 
@@ -66,7 +66,3 @@ GitHub Actions를 통해 자동화된 배포가 설정되어 있습니다:
 
 - **개발 환경**: `http://localhost:8080` (기본값)
 - **프로덕션 환경**: `BACKEND_API_URL` 환경 변수 사용
-
-## 📄 라이선스
-
-이 프로젝트는 MIT 라이선스 하에 있습니다.
