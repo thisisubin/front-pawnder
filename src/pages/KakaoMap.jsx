@@ -61,7 +61,137 @@ function KakaoMap({ onSelectLocation, latitude, longitude }) {
         );
     };
 
-    currentMarkerObjRef
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=0002645a847652028848c550afe30640&autoload=false&libraries=services`;
+        script.async = true;
+
+        script.onload = () => {
+            window.kakao.maps.load(() => {
+                const container = document.getElementById("map");
+
+                // 현재 위치가 있으면 현재 위치를, 없으면 기본 위치(서울시청)를 사용
+                const center = (currentLocation?.latitude && currentLocation?.longitude)
+                    ? new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude)
+                    : (latitude && longitude)
+                        ? new window.kakao.maps.LatLng(parseFloat(latitude), parseFloat(longitude))
+                        : new window.kakao.maps.LatLng(37.5665, 126.9780);
+
+                const options = {
+                    center,
+                    level: 3,
+                };
+
+                const map = new window.kakao.maps.Map(container, options);
+
+                let marker = new window.kakao.maps.Marker({
+                    position: center,
+                    map: map,
+                    title: '선택된 위치'
+                });
+
+                // 현재 위치 마커 (기본 마커와 동일한 스타일)
+                if (currentLocation?.latitude && currentLocation?.longitude) {
+                    console.log('현재 위치 마커 생성 중:', currentLocation);
+
+                    const currentMarker = new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude);
+                    const newCurrentMarkerObj = new window.kakao.maps.Marker({
+                        position: currentMarker,
+                        map: map,
+                        title: '현재 위치'
+                    });
+
+                    // 현재 위치 마커 객체를 ref에 저장
+                    currentMarkerObjRef.current = newCurrentMarkerObj;
+
+                    console.log('현재 위치 마커 객체:', newCurrentMarkerObj);
+
+                    // 현재 위치 마커 클릭 이벤트 추가
+                    window.kakao.maps.event.addListener(newCurrentMarkerObj, "click", function () {
+                        console.log('현재 위치 마커 클릭됨!');
+
+                        // 현재 위치 마커 활성화 상태 토글
+                        setIsCurrentMarkerActive(!isCurrentMarkerActive);
+
+                        if (isCurrentMarkerActive) {
+                            // 비활성화 상태로 전환
+                            console.log('현재 위치 마커 비활성화');
+                        } else {
+                            // 활성화 상태로 전환
+                            console.log('현재 위치 마커 활성화 - 지도를 클릭하면 마커가 이동합니다');
+                            // 선택된 위치 마커도 현재 위치로 설정
+                            marker.setPosition(newCurrentMarkerObj.getPosition());
+
+                            // 부모 컴포넌트에 현재 위치 전달
+                            onSelectLocation({
+                                latitude: currentLocation.latitude,
+                                longitude: currentLocation.longitude,
+                            });
+                        }
+                    });
+
+
+
+                    // 현재 위치로 지도 이동
+                    map.setCenter(currentMarker);
+                }
+
+                // 지도 클릭 이벤트
+                window.kakao.maps.event.addListener(map, "click", function (mouseEvent) {
+                    const latlng = mouseEvent.latLng;
+
+                    if (isCurrentMarkerActive && currentMarkerObjRef.current) {
+                        // 현재 위치 마커가 활성화된 상태라면 현재 위치 마커를 이동
+                        console.log('현재 위치 마커를 새로운 위치로 이동:', latlng.getLat(), latlng.getLng());
+                        currentMarkerObjRef.current.setPosition(latlng);
+
+                        // 현재 위치 상태 업데이트
+                        setCurrentLocation({
+                            latitude: latlng.getLat(),
+                            longitude: latlng.getLng(),
+                            accuracy: currentLocation?.accuracy || 0
+                        });
+
+                        // 선택된 위치 마커도 새로운 위치로 이동
+                        marker.setPosition(latlng);
+
+                        // 부모 컴포넌트에 새로운 위치 전달
+                        onSelectLocation({
+                            latitude: latlng.getLat(),
+                            longitude: latlng.getLng(),
+                        });
+
+                        // 현재 위치 마커 비활성화
+                        setIsCurrentMarkerActive(false);
+                    } else {
+                        // 일반적인 지도 클릭 - 선택된 위치 마커만 이동
+                        marker.setPosition(latlng);
+
+                        onSelectLocation({
+                            latitude: latlng.getLat(),
+                            longitude: latlng.getLng(),
+                        });
+                    }
+                });
+
+                // 선택된 위치 마커 클릭 이벤트
+                window.kakao.maps.event.addListener(marker, "click", function () {
+                    const position = marker.getPosition();
+                    onSelectLocation({
+                        latitude: position.getLat(),
+                        longitude: position.getLng(),
+                    });
+                });
+            });
+        };
+
+        document.head.appendChild(script);
+
+        // cleanup
+        return () => {
+            document.head.removeChild(script);
+        };
+    }, [latitude, longitude, onSelectLocation, currentLocation]);
 
     return (
         <div>
