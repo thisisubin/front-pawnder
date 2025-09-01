@@ -355,7 +355,7 @@ function MyPage({ user }) {
                                                         <h4>{pet.name}</h4>
                                                         <p>견종: {pet.type}</p>
                                                         <p>나이: {pet.age}세</p>
-                                                        <p>성별: {pet.gender === 'M' ? '수컷' : '암캇'}</p>
+                                                        <p>성별: {pet.gender === 'M' ? '수컷' : '암컷'}</p>
                                 
                                                     </div>
                                                     <button
