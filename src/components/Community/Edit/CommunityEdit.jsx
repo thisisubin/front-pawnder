@@ -232,6 +232,7 @@ function CommunityEdit() {
                         required
                         style={{
                             width: '100%',
+                            whiteSpace: "pre-wrap",
                             padding: '15px',
                             border: '2px solid #e0e0e0',
                             borderRadius: '10px',

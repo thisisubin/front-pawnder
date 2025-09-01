@@ -112,8 +112,8 @@ function MyPage({ user }) {
         try {
             // TODO: 백엔드에서 입양 신청 내역 API 구현 필요
             const response = await axios.get('/api/adopt/adoption/my-applications', {
-                 withCredentials: true
-             });
+                withCredentials: true
+            });
             setMyAdoptions(response.data);
         } catch (error) {
             console.error('입양 신청 내역 로드 실패:', error);
@@ -353,10 +353,10 @@ function MyPage({ user }) {
                                                     )}
                                                     <div className="pet-info">
                                                         <h4>{pet.name}</h4>
-                                                        <p>견종: {pet.breed}</p>
+                                                        <p>견종: {pet.type}</p>
                                                         <p>나이: {pet.age}세</p>
-                                                        <p>성별: {pet.gender === 'M' ? '남자' : '여자'}</p>
-                                                        <p>등록일: {new Date(pet.createdAt).toLocaleDateString()}</p>
+                                                        <p>성별: {pet.gender === 'M' ? '수컷' : '암캇'}</p>
+                                
                                                     </div>
                                                     <button
                                                         className="view-btn"
@@ -396,18 +396,18 @@ function MyPage({ user }) {
                                                         <p>견종: {adoption.type}</p>
                                                         <p>신청일: {new Date(adoption.appliedAt).toLocaleDateString()}</p>
                                                         <p>상태:
-                                                        <span className={`status ${adoption.adoptStatus.toLowerCase()}`}>
-                                                            {adoption.adoptStatus === 'PENDING' ? '검토중' :
-                                                                adoption.adoptStatus === 'APPROVED' ? '승인됨' :
-                                                                    adoption.adoptStatus === 'REJECTED' ? '거절됨' : adoption.adoptStatus}
-                                                        </span>
+                                                            <span className={`status ${adoption.adoptStatus.toLowerCase()}`}>
+                                                                {adoption.adoptStatus === 'PENDING' ? '검토중' :
+                                                                    adoption.adoptStatus === 'APPROVED' ? '승인됨' :
+                                                                        adoption.adoptStatus === 'REJECTED' ? '거절됨' : adoption.adoptStatus}
+                                                            </span>
                                                         </p>
                                                         <p>발견된 지역: {adoption.location}</p>
                                                         <img
-                                                src={adoption.petImageUrl}
-                                                alt="유기견 사진"
-                                                className="pet-image"
-                                            />  
+                                                            src={adoption.petImageUrl}
+                                                            alt="유기견 사진"
+                                                            className="pet-image"
+                                                        />
                                                     </div>
                                                 </div>
                                             ))}
@@ -500,10 +500,10 @@ function MyPage({ user }) {
                                 <div className="additional-info">
                                     <h5>후원견 사진</h5>
                                     <img
-                                                src={selectedSponsor.imageUrl}
-                                                alt="유기견 사진"
-                                                className="pet-image"
-                                            />
+                                        src={selectedSponsor.imageUrl}
+                                        alt="유기견 사진"
+                                        className="pet-image"
+                                    />
                                 </div>
                             </div>
                         </div>
