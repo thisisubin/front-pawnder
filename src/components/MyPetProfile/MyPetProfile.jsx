@@ -215,12 +215,6 @@ function MyPetProfile() {
 
                 <div className="pet-profile-actions">
                     <button
-                        onClick={() => window.location.href = `/mypet/edit/${petProfile.petId}`}
-                        className="edit-btn"
-                    >
-                        수정
-                    </button>
-                    <button
                         onClick={() => handleDeletePet(petProfile.petId)}
                         className="delete-btn"
                     >
