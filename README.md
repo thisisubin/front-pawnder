@@ -9,23 +9,10 @@
 - GitHub Secrets에 다음을 추가하세요:
   - `EC2_HOST`: EC2 인스턴스의 퍼블릭 IP 주소
   - `EC2_SSH_KEY`: EC2 접속용 SSH 프라이빗 키
-  - `BACKEND_API_URL`: 백엔드 서버의 퍼블릭 IP 주소
+  - `BACKEND_API_URL`: 백엔드 서버의 퍼블릭 IP 주소 
 
-## 🛠️ 로컬 개발
-
-```bash
-# 의존성 설치
-npm install
-
-# 개발 서버 실행
-npm start
-
-# 빌드
-npm run build
-
-# 테스트 실행
-npm test
-```
+## BackEnd Repo
+https://github.com/thisisubin/back-pawnder.git
 
 ## 📁 프로젝트 구조
 
